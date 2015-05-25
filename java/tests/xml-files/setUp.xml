@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Contributors: Kjersti Fagerholt, Roar Gjøvaag, Ragnhild Krogh, Espen Strømjordet,
+ Audun Sæther, Hanne Marie Trelease, Eivind Halmøy Wolden
+ 
+ "Copyright 2015 The TAG CLOUD/SINTEF project
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License."
+ -->
+<!-- Some initial data to run tests on -->
+<dataset>
+	<user userId="1" mail="test" age_group="0" gender="1" use_of_location="0"/>
+	<user userId="2" mail="test2" age_group="0" gender="1" use_of_location="0"/>	
+	<story storyId="DF.1098" numericalId="1098" title="Legeliv i Trondhjem"/>
+	<story storyId="DF.1115" numericalId="1115" title="Evig eies kun det teipte"/>
+	<story storyId="DF.1501" numericalId="1501" title="Dr. Pinnebergs jul - et arkivmysterium i to akter"/>
+	<story storyId="DF.1709" numericalId="1709"/>
+	<story storyId="DF.1812" numericalId="1812"/>
+	<story storyId="DF.1849" numericalId="1849"/>
+	<story storyId="DF.1901" numericalId="1901"/>
+	<stored_story userId="1" storyId="DF.1709" explanation="mahout" false_recommend="0" type_of_recommendation="0" in_frontend_array="0" />
+	<stored_story userId="1" storyId="DF.1812" rating="3" explanation="mahout" false_recommend="0" type_of_recommendation="0" recommend_ranking="1" in_frontend_array="0" />
+	<stored_story userId="1" storyId="DF.1849" explanation="mahout" false_recommend="0" type_of_recommendation="0" in_frontend_array="1" />
+	<stored_story userId="1" storyId="DF.1901" rating="5" explanation="mahout" false_recommend="0" type_of_recommendation="0" recommend_ranking="2" in_frontend_array="1"/>
+	<stored_story userId="2" storyId="DF.1812" explanation="mahout" false_recommend="0" type_of_recommendation="0" recommend_ranking="1" in_frontend_array="1"/>
+	<stored_story userId="2" storyId="DF.1901" explanation="mahout" false_recommend="0" type_of_recommendation="1" recommend_ranking="2" in_frontend_array="0"/>
+	<story_state recordedStateId="1" storyId="DF.1812" userId="1" stateId="1" />
+	<story_state recordedStateId="2" storyId="DF.1849" userId="1" stateId="1" />
+	<preference_value userId="1" storyId="DF.1098" numericalId="1098" preferenceValue="5.4"/>
+	<preference_value userId="1" storyId="DF.1501" numericalId="1501" preferenceValue="2.5"/>
+	<preference_value userId="1" storyId="DF.1812" numericalId="1812" preferenceValue="4.56"/>
+	<preference_value userId="1" storyId="DF.1849" numericalId="1849" preferenceValue="2.75"/>
+	<preference_value userId="1" storyId="DF.1901" numericalId="1901" preferenceValue="3.4"/>
+	<preference_value userId="2" storyId="DF.1849" numericalId="1849" preferenceValue="3.76"/>
+	<preference_value userId="2" storyId="DF.1812" numericalId="1812" preferenceValue="5.76"/>
+</dataset>
