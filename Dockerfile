@@ -15,7 +15,7 @@ RUN mv mahout-distribution-0.9 /opt/
 RUN cd /opt/mahout-distribution-0.9 && mvn -DskipTests install
 
 #Download app and config files
-RUN git clone https://github.com/ewolden/vettu-hva /app
+RUN git clone https://github.com/ewolden/Storytelling-backend /app
 RUN mv /app/docker/start-apache2.sh /start-apache2.sh
 RUN mv /app/docker/start-mysqld.sh /start-mysqld.sh
 RUN mv /app/docker/run.sh /run.sh
@@ -43,9 +43,6 @@ RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
 RUN mv /app/docker/crons.conf /crons.conf
 RUN chmod 755 /crons.conf
 RUN crontab /crons.conf
-
-# Add config file with passwords
-ADD config.php /app/database/
 
 #Enviornment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
