@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Blablabla"
 # VOLUME_HOME="/var/lib/mysql"
 
 # sed -ri -e "s/^upload_max_filesize.*/upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE}/" \
@@ -18,4 +18,4 @@
 # export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 # cron -f &
 # echo "=> Cron is running, harvesting performed at 03:05"
-exec supervisord -n 
+# exec supervisord -n 
