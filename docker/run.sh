@@ -16,8 +16,6 @@ fi
 
 #set java path for maven
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
-export MAHOUT_HOME=/opt/mahout-distribution-0.9/bin
-export PATH=$PATH:$MAHOUT_HOME
 cron -f &
 echo "=> Cron is running, harvesting performed at 03:05"
 exec supervisord -n 
