@@ -23,3 +23,14 @@ To stop the running container:
 To remove old containers:
 
 ```docker rm containerName```
+
+
+# Config file parameters
+DB_USERNAME - Can be left as root since this is only used internally in the image
+DB_PASSWORD - Can be left blank since this is only used internally in the image
+DB_HOST -  Can be left blank which is the same as typing localhost
+DB_NAME - storytelling is the name of the database
+API_URL - This is the URL to digitalt musems API
+API_KEY - The API key needed to use digitalt museums API
+APP_MAIL - The email used for sending users emails upon creation of user (uses a gmail address)
+APP_MAIL_PASS - The password for the email given
