@@ -30,6 +30,7 @@ class PreferenceValue {
 	private $numToBeRead;
 	private $numSwipedPast;	
 	private $numCommonCategories;
+	private $numRejected;
 
 	public function __construct($story, $user){
 		$this->story = $story;
@@ -64,6 +65,10 @@ class PreferenceValue {
 		$this->numSwipedPast = $numSwipedPast;
 	}
 		
+	public function setNumRejected($numRejected){
+		$this->numRejected = $numRejected;
+	}
+	
 	public function getUser(){
 		return $this->user;
 	}
@@ -90,6 +95,10 @@ class PreferenceValue {
 	
 	public function getNumSwipedPast(){
 		return $this->numSwipedPast;
+	}
+	
+	public function getNumRejected(){
+		return $this->numRejected;
 	}
 	
 	public function getNumCommonCategories(){

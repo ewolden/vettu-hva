@@ -102,6 +102,9 @@ class computePreferenceValues {
 		/*getCommonCategoryPercentage describe how similar the user's category preference is to a story's categories*/
 		$value += CATEGORY_LIKE*$preferenceValue->getCommonCategoryPercentage();
 		
+		/*getNumRejected is the number of times a story has been rejected by the user*/
+		$value -= REJECTED*$preferenceValue->getNumRejected();
+		
 		/*getNumToBeRead is how many times the story have been put in the to-be-read list*/
 		$value += READ_LATER*$preferenceValue->getNumToBeRead();
 		
@@ -110,7 +113,7 @@ class computePreferenceValues {
 		
 		/*getNumRecommended is the number of times the story have been recommended. 
 		  If a story have been recommended several times this should have a negative impact*/
-		$value -= CATEGORY_NO_ANSWER*$preferenceValue->getNumRecommended();
+		$value -= RECOMMENDED*$preferenceValue->getNumRecommended();
 		
 		/*As of now, swiping is not stored in the database, so this will have no effect*/
 		$value -= SWIPED_PAST*$preferenceValue->getNumSwipedPast();
