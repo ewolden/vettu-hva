@@ -285,6 +285,11 @@ switch ($type) {
 	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 2));
 	break;
 	
+	/** Set swiped past state in the database */
+	case "swipedPastStory":
+	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6));
+	break;
+	
 	/** Register users usage of app in the database */
 	case "appUsage":
 	$return = $dbStory->insertUpdateAll('user_usage', array($request->userId, $request->usageType));

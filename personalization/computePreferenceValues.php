@@ -166,7 +166,9 @@ class computePreferenceValues {
 				$preferenceValue->setNumRated($numberOfOccurrences);
 			break;
 						
-			/*TODO: A SWIPED_PAST-case should be here*/
+			case 6:
+				$preferenceValue->setNumSwipedPast($numberOfOccurrences);
+			break;
 			
 			default:
 				echo "";
