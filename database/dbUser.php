@@ -100,6 +100,7 @@ class dbUser extends dbHelper {
         } else {
         	$this->insertUpdateAll('user_tag', array($userId, "Lest"));
         	$this->insertUpdateAll('user_tag', array($userId, "Les senere"));
+			$this->insertUpdateAll('user_tag', array($userId, "Historikk"));
         }
 
          /*Inserting category preferences*/

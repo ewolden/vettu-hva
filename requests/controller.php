@@ -210,8 +210,6 @@ switch ($type) {
 			'id' => $story['storyId'],
 			'title' => $story['title'],
 			'description' => $story['introduction'],
-			'false_recommend' => $story['false_recommend'],
-			'explanation' => explode(",",$story['explanation']),
 			'picture' => "",
 			'thumbnail' => "",
 			'categories' => "",
@@ -313,6 +311,7 @@ switch ($type) {
 	/** Set recommended state for story in database */ 
 	case "recommendedStory":
 	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
+	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk'));
 	break;
 	
 	/** Get more stories after the 10 initial recommendations*/
