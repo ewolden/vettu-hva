@@ -239,20 +239,22 @@ class dbStory extends dbHelper{
 	 * @return $rows rows returned from the database query
 	 */
 	public function getStoryList($userId, $tagName){
-		$query = "SELECT s.storyId, title, author, introduction, date, us.tagName, 
-				group_concat(distinct categoryName) as categories, mediaId
+		$query = "SELECT s.storyId, title, author, introduction, us.insertion_time as insertTime,
+				group_concat(distinct categoryName) as categories, mediaId, st.rating as rating
 				FROM story as s, user_storytag as us, story_subcategory as ss, 
-				category_mapping as cm, category as c, story_media as sm
+				category_mapping as cm, category as c, story_media as sm, stored_story as st
 				WHERE s.storyId = us.storyId
 				AND us.userId = ? AND us.tagName = ?
 				AND s.storyId = ss.storyId
 				AND ss.subcategoryId = cm.subcategoryId
 				AND cm.categoryId = c.categoryId
 				AND s.storyId = sm.storyId
+				AND st.storyId = s.storyId
+				AND st.userId = ?
 				GROUP BY s.storyId
-				ORDER BY us.insertion_time";
+				ORDER BY us.insertion_time DESC";
 		$stmt = $this->db->prepare($query);
-		$stmt->execute(array($userId, $tagName));
+		$stmt->execute(array($userId, $tagName, $userId));
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return($rows);
 	}

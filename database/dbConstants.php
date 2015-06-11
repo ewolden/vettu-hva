@@ -42,7 +42,7 @@ class dbConstants {
 			'category_preference' => array(2,false,'userId','categoryId'),
 			'media_preference' => array(2,false,'userId','mediaId','ranking'),
 			'user_tag' => array(2, false, 'userId', 'tagName'),
-			'user_storytag' => array(3,false,'userId', 'storyId', 'tagName'),
+			'user_storytag' => array(3,false,'userId', 'storyId', 'tagName', 'insertion_time'),
 			'stored_story' => array(2,false, 'userId', 'storyId', 'explanation', 'rating', 'false_recommend', 'type_of_recommendation','recommend_ranking', 'in_frontend_array'),
 			'story_state' => array(1,true, 'recordedStateId', 'storyId', 'userId', 'stateId'),
 			'user_usage' => array(1, true, 'usageId', 'userId', 'usageType'),

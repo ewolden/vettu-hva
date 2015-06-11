@@ -99,6 +99,13 @@ class computePreferenceValues {
 	public function computePreferenceValue($preferenceValue){
 		$value = 0;
 		
+		/*getRescoredRating returns the actual rating if it exists, otherwise 2.5*/
+		$value += $preferenceValue->getRescoredRating();
+		
+		if ($value != 2.5){
+			return $value;
+		}
+		
 		/*getCommonCategoryPercentage describe how similar the user's category preference is to a story's categories*/
 		$value += CATEGORY_LIKE*$preferenceValue->getCommonCategoryPercentage();
 		
@@ -117,9 +124,6 @@ class computePreferenceValues {
 		
 		/*As of now, swiping is not stored in the database, so this will have no effect*/
 		$value -= SWIPED_PAST*$preferenceValue->getNumSwipedPast();
-		
-		/*Not sure if this should be weighted. As it is now, it's dominating the value quite heavily. But maybe it should do that?*/
-		$value += $preferenceValue->getRescoredRating();
 		
 		/*Mahout doesn't seem to like negative values, so 0 is the lowest possible value*/
 		if ($value<0){

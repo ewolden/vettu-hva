@@ -169,7 +169,8 @@ switch ($type) {
 			$updated = $dbStory->insertUpdateAll('stored_story', array($request->userId, $request->storyId, null, $request->rating, 0, 0,null,0));
 		
 		if($updated){
-			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Lest"));
+			$timestamp = date('Y-m-d G:i:s');
+			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Lest", $timestamp));
 			$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 5));
 		
 		/*Run the recommender*/
@@ -190,7 +191,8 @@ switch ($type) {
 	/** Add a new tag and connect it to the user, and the story*/
 	case "addNewTag":
 	$dbUser->insertUpdateAll('user_tag', array($request->userId, $request->tagName));
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName));
+	$timestamp = date('Y-m-d G:i:s');
+	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
 	break;
 
 	/** Tag a story*/
@@ -198,7 +200,8 @@ switch ($type) {
 	if($request->tagName == "Les senere"){
 		$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 3));
 	}
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName));
+	$timestamp = date('Y-m-d G:i:s');
+	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
 	break;
 
 	/** Get all stories connected to a user and the tagName*/
@@ -215,7 +218,8 @@ switch ($type) {
 			'categories' => "",
 			'mediaType' => array(),
 			'author' => $story['author'],
-			'date' => "");
+			'insertTime' => $story['insertTime'],
+			'rating' => $story['rating']);
 		if(array_key_exists('categories', $story))
 			$list['categories'] = explode(",",$story['categories']);
 		if(array_key_exists('mediaId', $story)){
@@ -311,7 +315,8 @@ switch ($type) {
 	/** Set recommended state for story in database */ 
 	case "recommendedStory":
 	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk'));
+	$timestamp = date('Y-m-d G:i:s');
+	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk', $timestamp));
 	break;
 	
 	/** Get more stories after the 10 initial recommendations*/
