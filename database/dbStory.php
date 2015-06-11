@@ -240,7 +240,7 @@ class dbStory extends dbHelper{
 	 */
 	public function getStoryList($userId, $tagName){
 		$query = "SELECT s.storyId, title, author, introduction, us.insertion_time as insertTime,
-				group_concat(distinct categoryName) as categories, mediaId, st.rating as rating
+				group_concat(distinct cm.categoryId) as categories, mediaId, st.rating as rating
 				FROM story as s, user_storytag as us, story_subcategory as ss, 
 				category_mapping as cm, category as c, story_media as sm, stored_story as st
 				WHERE s.storyId = us.storyId
