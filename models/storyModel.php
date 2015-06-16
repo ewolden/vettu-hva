@@ -50,6 +50,8 @@ class storyModel{
     private $createdDate;
     private $numericalId;
     private $userTags = array();
+	private $lat;
+	private $long;
 
     /**
      * Constructor.
@@ -73,6 +75,8 @@ class storyModel{
         $this->institution = (string) $xml->children('europeana', TRUE)->dataProvider;
         $this->url = "http://digitaltfortalt.no/things/thing/H-DF/".$this->storyId;
         $this->createdDate = (string) $xml->children('dcterms', TRUE)->created; 
+		$this->lat = (string) $xml->children('abm', TRUE)->lat;
+		$this->long = (string) $xml->children('abm', TRUE)->long;
 
         //Create a list of all creators for the story
         foreach ($xml->children('dc', TRUE)->creator as $element)
@@ -245,7 +249,13 @@ class storyModel{
     public function setNumericalId($numericalId){
         $this->numericalId = $numericalId;
     }
-    
+	public function setLat($lat){
+		$this->lat = $lat;
+	}
+    public function setLong($long){
+		$this->long = $long;
+	}
+	
     //GETTERS
     public function getstoryId()
     {
@@ -338,7 +348,13 @@ class storyModel{
     public function getRating(){
         return $this->rating;
     }
-    
+    public function getLat(){
+		return $this->lat;
+	}
+	public function getLong(){
+		return $this->long;
+	}
+	
     /**
      * Returns all info in model as an array
      * @return storyArray
@@ -364,7 +380,9 @@ class storyModel{
             'typeOfRecommendation' => $this->typeOfRecommendation,
             'explanation' => $this->explanation,
             'falseRecommend' => $this->falseRecommend,
-            'userTags' => $this->userTags);
+            'userTags' => $this->userTags,
+			'latitude' => $this->lat,
+			'longitude' => $this->long);
     }
 
     public function sendStory(){
