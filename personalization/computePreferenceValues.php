@@ -59,9 +59,9 @@ class computePreferenceValues {
 			$storyModel->setCategoryList($story['categories']);
 			$storyModel->setNumericalId($story['numericalId']);
 			$values[] = $this->computeOneValue($storyModel, true);
-			$placeHolderArray[] = '(?,?,?,?)';
+			$placeHolderArray[] = '(?,?,?,?,?)';
 		}
-		$columnsString = 'userId,storyId,numericalId,preferenceValue';
+		$columnsString = 'userId,storyId,numericalId,time_stamp,preferenceValue';
 		
 		$this->dbStory->deleteFromTable('preference_value','userId',$this->user->getUserId());
 		/*Inserting all computed preference values.
@@ -85,13 +85,14 @@ class computePreferenceValues {
 		
 		$value = $this->computePreferenceValue($preferenceValue);
 		
+		$timestamp = date('Y-m-d G:i:s');
 		/*If this method is called from computeAllValues we should return the result*/
 		if($calledFromComputeAllValues){
-			return ''.$this->user->getUserId().','.$storyModel->getstoryId().','.$storyModel->getNumericalId().','.$value.'';
+			return ''.$this->user->getUserId().','.$storyModel->getstoryId().','.$storyModel->getNumericalId().','.$timestamp.','.$value.'';
 		}
 		/*If this method is called directly, we're only computed one preferenceValue*/
 		else{
-		    $this->dbStory->insertUpdateAll('preference_value', array($this->user->getUserId(), $storyModel->getstoryId(), $storyModel->getNumericalId(), $value));
+		    $this->dbStory->insertUpdateAll('preference_value', array($this->user->getUserId(), $storyModel->getstoryId(), $storyModel->getNumericalId(), $timestamp,$value));
 		}
 	}
 	

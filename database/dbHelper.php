@@ -201,7 +201,7 @@ class DbHelper extends dbConstants {
 			$stmt = $this->db->prepare($query);
 			$stmt->execute();
 		}
-		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$rows = $stmt->fetchAll(PDO::FETCH_BOTH);
 		if ($stmt->rowCount() > 0){
 			return($rows);
 		}

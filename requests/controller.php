@@ -57,6 +57,11 @@ switch ($type) {
 	case "getStories":
 	/*This methods empties the front end array for this user*/
 	$dbStory->emptyFrontendArray($request->userId);
+	$userModel = new userModel();
+	$userInfo = $dbUser->getUserFromId($request->userId);
+	$userModel->addFromDB($userInfo);
+	$recommend = new runRecommender($userModel);
+	$recommend->runRecommender();
 	$data = $dbStory->getRecommendedStories($request->userId);
 	$returnArray = array();
 	foreach ($data as $story) {
@@ -92,7 +97,7 @@ switch ($type) {
 	print_r(json_encode($returnArray));
 	break;
 	
-	/** Recieves request from frotned, adds a new user to the database with autoincremented userId */
+	/** Recieves request from frontend, adds a new user to the database with autoincremented userId */
 	case "addUser":
 	$userModel = new userModel();
 	$userModel->addUser(-1, $request->email);
@@ -115,27 +120,14 @@ switch ($type) {
 
 	$userId = $dbUser->updateUserInfo($userModel);
 	if($userId){/* User sucessfully updated, returns sucess message and userId */
-		/* Running the recommender only if the update include categories to avoid running it 
-		when the user sets gender and age.*/
-		$output = $userId;
-		if(!is_null($request->category_preference)){
-			$startTime = microtime(true);
-			$userModel->setUserId($userId);
-			$recommend = new runRecommender($userModel);
-			$prefTime = microtime(true)-$startTime;
-			$output = $recommend->runRecommender();
-			$endTime = microtime(true)-$startTime;
-			$output .= "Preference value computation time: ".$prefTime;
-			$output .= "\nTotal recommendation time: ".$endTime;
-		}
-		print_r(json_encode(array('status' => "successfull",'userId' => $output)));
+		print_r(json_encode(array('status' => "successfull",'userId' => $userId)));
 	}
 	else { /* User entered an email that is already in the DB, returns status failed */
 		print_r(json_encode(array('status' => "failed")));
 	}
 	break;
 
-/** Invoked when frontend is trying to retrive a user instance using email as identifier */
+	/** Invoked when frontend is trying to retrive a user instance using email as identifier */
 	case "getUserFromEmail":
 	$userFromDB = $dbUser->getUserFromEmail($request->email);
 	if($userFromDB[0]) { /* user exists returning status successfull and user instance */
@@ -148,7 +140,7 @@ switch ($type) {
 	}
 	break;
 
-/** Invoked when frontend is trying to retrive a user instance using a userId as identifier */
+	/** Invoked when frontend is trying to retrive a user instance using a userId as identifier */
 	case "getUserFromId":
 	$userFromDB = $dbUser->getUserFromId($request->userId);
 	if($userFromDB[0]) { /* user exists returning status successfull and user instance */
@@ -172,13 +164,7 @@ switch ($type) {
 			$timestamp = date('Y-m-d G:i:s');
 			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Lest", $timestamp));
 			$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 5));
-		
-		/*Run the recommender*/
-			$userModel = new userModel();
-			$userInfo = $dbUser->getUserFromId($request->userId);
-			$userModel->addFromDB($userInfo);
-			$recommend = new runRecommender($userModel);
-			$recommend->runRecommender();
+
 			print_r(json_encode(array('status' => "successfull")));
 		} else {
 			print_r(json_encode(array('status' => "failed")));
@@ -296,15 +282,6 @@ switch ($type) {
 	case "appUsage":
 	$return = $dbStory->insertUpdateAll('user_usage', array($request->userId, $request->usageType));
 	if($return){
-		/* If the user is leaving the application, update recommendations in database so they are ready for next log on*/
-		if($request->usageType == "Closed"){
-			$dbStory->emptyFrontendArray($request->userId);
-			$userModel = new userModel();
-			$userInfo = $dbUser->getUserFromId($request->userId);
-			$userModel->addFromDB($userInfo);
-			$recommend = new runRecommender($userModel);
-			$recommend->runRecommender();
-		}
 		print_r(json_encode(array('status' => "successfull")));
 	}
 	else {
@@ -363,7 +340,7 @@ switch ($type) {
 	}
 	print_r(json_encode($returnArray));
 	break;
-
+	
 	default: 
 	echo "Unknown type";
 	break;
