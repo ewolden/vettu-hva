@@ -192,7 +192,8 @@ switch ($type) {
 
 	/** Get all stories connected to a user and the tagName*/
 	case "getList":
-	$data = $dbStory->getStoryList($request->userId, $request->tagName);
+	$data = $dbStory->getStoryList($request->userId, $request->tagName, $request->category, 
+		$request->order, $request->offset, $request->sortby);
 	$returnArray = array();
 	foreach($data as $story){
 		$list = array(
@@ -204,7 +205,7 @@ switch ($type) {
 			'categories' => "",
 			'mediaType' => array(),
 			'author' => $story['author'],
-			'insertTime' => $story['insertTime'],
+			'insertTime' => $story['insertion_time'],
 			'rating' => $story['rating']);
 		if(array_key_exists('categories', $story))
 			$list['categories'] = explode(",",$story['categories']);

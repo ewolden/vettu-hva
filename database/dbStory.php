@@ -32,6 +32,7 @@ class dbStory extends dbHelper{
 	/** Construct a new dbHelper-instance */
 	public function __construct() {
 		parent::__construct();
+		ini_set('max_execution_time', 1500);
 	}
 	
 	/**
@@ -42,9 +43,17 @@ class dbStory extends dbHelper{
     public function addStoriesToDatabase($harvestTime){
         $startDoc = 0;
         $numberOfDocs = -1;
-
+		$areas = "";
+		if (filesize('harvestArea.txt')!= 0){
+			$areas .= "=artifact.event.place:(";
+			$harvestAreaFile = fopen('harvestArea.txt', 'r') or die ("Unable to open file");
+			$areas .= fread($harvestAreaFile, filesize('harvestArea.txt'));
+			fclose($harvestAreaFile);
+			$areas .= ")&fq";
+		}
+	
         while($startDoc < $numberOfDocs || $numberOfDocs == -1){
-            $obj = json_decode(file_get_contents(API_URL.'select?q=artifact.event.place:(s%C3%B8r-tr%C3%B8ndelag%20OR%20nord-tr%C3%B8ndelag)&fq=(identifier.owner:H-DF)&start='.$startDoc.'&wt=json&api.key='.API_KEY));
+            $obj = json_decode(file_get_contents(API_URL.'select?q'.$areas.'=(identifier.owner:H-DF)&start='.$startDoc.'&wt=json&api.key='.API_KEY));
             $numberOfDocs = $obj->response->numFound;
             foreach($obj->response->docs as $doc) {
                 $doc = get_object_vars($doc);
@@ -238,23 +247,37 @@ class dbStory extends dbHelper{
 	 * @param String $tagName
 	 * @return $rows rows returned from the database query
 	 */
-	public function getStoryList($userId, $tagName){
-		$query = "SELECT s.storyId, title, author, introduction, us.insertion_time as insertTime,
-				group_concat(distinct cm.categoryId) as categories, mediaId, st.rating as rating
-				FROM story as s, user_storytag as us, story_subcategory as ss, 
-				category_mapping as cm, category as c, story_media as sm, stored_story as st
+	public function getStoryList($userId, $tagName, $category, $order, $offset, $sortby){
+		if($category == 0){
+			$category = 'c.categoryId';
+		}
+		$query = "SELECT s.storyId, title, author, introduction, us.insertion_time AS insertion_time,
+				group_concat(distinct c.categoryId) AS categories, mediaId, st.rating AS rating
+				FROM story AS s JOIN 
+					(SELECT story.storyId AS storyId , cm.categoryId AS categoryId 
+					FROM story, 
+					story_subcategory AS ss, category_mapping AS cm, category AS c 
+					WHERE story.storyId = ss.storyId
+					AND ss.subcategoryId = cm.subcategoryId
+					AND cm.categoryId = c.categoryId 
+					AND c.categoryId=".$category.") AS nested ON s.storyId=nested.storyId, 
+					user_storytag AS us, story_media AS sm, stored_story AS st,story_subcategory AS ss, 
+					category_mapping AS cm, category AS c
 				WHERE s.storyId = us.storyId
-				AND us.userId = ? AND us.tagName = ?
+				AND us.userId = :userId AND us.tagName = :tagName
+				AND s.storyId = sm.storyId
+				AND st.storyId = s.storyId
+				AND st.userId = :userId
 				AND s.storyId = ss.storyId
 				AND ss.subcategoryId = cm.subcategoryId
 				AND cm.categoryId = c.categoryId
-				AND s.storyId = sm.storyId
-				AND st.storyId = s.storyId
-				AND st.userId = ?
 				GROUP BY s.storyId
-				ORDER BY us.insertion_time DESC";
+				ORDER BY ".$sortby.' '.$order."
+				LIMIT ".$offset.",20";
 		$stmt = $this->db->prepare($query);
-		$stmt->execute(array($userId, $tagName, $userId));
+		$stmt->bindParam(':userId', $userId,PDO::PARAM_INT);
+		$stmt->bindParam(':tagName', $tagName,PDO::PARAM_STR);
+		$stmt->execute();
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return($rows);
 	}
