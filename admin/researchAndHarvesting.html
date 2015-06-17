@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<div class="section" id="research">
+			<h2 class="sectionHeader" id="researchHeader">Research data</h2>
+			<input type="button" value="Generate Excel file" onclick="createResearchData()">
+			<br><br>
+			<div id="downloadDiv"></div>
+			<script>
+				var downloadDiv = document.getElementById("downloadDiv");
+				function createResearchData(){
+					downloadDiv.innerHTML = "Generating Excel file (this may take a while) ...";
+					var t = setInterval(addDot, 1000);
+					xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange=function() {
+						if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+							clearInterval(t);
+							downloadDiv.innerHTML = "";
+							a = document.createElement("a");
+							a.setAttribute('download','');
+							a.innerHTML = 'Download Excel file';
+							a.href = 'researchData.xlsx';
+							downloadDiv.appendChild(a);
+							var research = document.getElementById('research');
+							research.appendChild(downloadDiv);
+						}
+					}
+					xmlhttp.open("POST", "./researchData.php", true);
+					xmlhttp.send();	
+				}
+				function addDot(){
+					downloadDiv.innerHTML += ".";
+				}
+			</script>
+		</div>
+		<div class="section" id="harvesting">
+			<h2 class="sectionHeader" id="harvestingHeader">Harvesting areas</h2>
+			<form>
+				<div class="selectList" id="selectList">
+					<h4>Select areas to harvest from</h4>
+					<label><input name="countyCheckbox" type="checkbox" id="s%C3%B8r-tr%C3%B8ndelag" onclick="noLimitCheck()"/>Sør-Trøndelag</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="nord-tr%C3%B8ndelag" onclick="noLimitCheck()"/>Nord-Trøndelag</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="nordland" onclick="noLimitCheck()"/>Nordland</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="troms" onclick="noLimitCheck()"/>Troms</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="finnmark" onclick="noLimitCheck()"/>Finnmark</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="m%C3%B8re+og+romsdal" onclick="noLimitCheck()"/>Møre og Romsdal</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="sogn+og+fjordane" onclick="noLimitCheck()"/>Sogn og Fjordane</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="hordaland" onclick="noLimitCheck()"/>Hordaland</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="rogaland" onclick="noLimitCheck()"/>Rogaland</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="vest-agder" onclick="noLimitCheck()"/>Vest-Agder</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="aust-agder" onclick="noLimitCheck()"/>Aust-Agder</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="telemark" onclick="noLimitCheck()"/>Telemark</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="buskerud" onclick="noLimitCheck()"/>Buskerud</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="oppland" onclick="noLimitCheck()"/>Oppland</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="hedmark" onclick="noLimitCheck()"/>Hedmark</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="oslo" onclick="noLimitCheck()"/>Oslo</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="akershus" onclick="noLimitCheck()"/>Akershus</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="%C3%B8stfold" onclick="noLimitCheck()"/>Østfold</label><br>
+					<label><input name="countyCheckbox" type="checkbox" id="vestfold" onclick="noLimitCheck()"/>Vestfold</label><br>
+					<hr width=200px align="left">
+					<label><input type="checkbox" id="nolimit" onclick="noLimitClicked()"/>No geographical limit</label><br><br>
+				</div>
+				<div class="storeButton">
+					<input type="button" value="Lagre" onclick="storeCounties()"/>
+				</div>
+				<br>
+				<div id="harvestingText">
+				</div>
+			</form>
+			<script>
+				var splitValue = "%20OR%20";
+					
+				window.onload = function (){
+					xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange=function() {
+						if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+							var response = xmlhttp.responseText;
+							var countyArray = response.split(splitValue);
+							for (var county in countyArray){
+								document.getElementById(countyArray[county]).checked = true;
+							}
+							
+						}
+					}
+					xmlhttp.open("GET", "./getSelectedCounties.php", true);
+					xmlhttp.send();	
+				}
+				
+				function noLimitClicked(){
+					var noLimitCheckbox = document.getElementById('nolimit');
+					if (noLimitCheckbox.checked == true){
+						var checkboxes = document.getElementsByName('countyCheckbox');
+						for (var checkbox in checkboxes){
+							checkboxes[checkbox].checked = false;
+						}
+					}
+				}
+				
+				function noLimitCheck(){
+					document.getElementById('nolimit').checked = false;
+					var harvestDiv = document.getElementById('harvestingText');
+					harvestDiv.innerHTML = ""; 
+				}
+				
+				function storeCounties(){
+					var checkboxes = document.getElementsByName('countyCheckbox');
+					var areas = "";
+					for (var checkbox in checkboxes){
+						if(checkboxes[checkbox].checked == true){
+							areas += checkboxes[checkbox].id + splitValue;
+						}
+					}
+					areas = areas.substring(0,areas.length-splitValue.length);
+					var params = "areas="+areas;
+					xmlhttp = new XMLHttpRequest();
+	
+					xmlhttp.onreadystatechange=function() {
+						if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+							var harvestDiv = document.getElementById('harvestingText');
+							harvestDiv.innerHTML = "Harvesting areas stored.The stored areas will be used next time the harvesting is done."; 
+						}
+					}
+
+					xmlhttp.open("POST", "./storeHarvestAreas.php", true);
+					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					xmlhttp.send(params);
+					
+				}
+			</script>
+		</div>
+	</body>
+</html>
