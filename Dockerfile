@@ -32,6 +32,8 @@ RUN rm -rf /var/lib/mysql/*
 # config to enable .htaccess
 RUN a2enmod rewrite
 
+ADD .htpasswd /.htpasswd
+
 # Configure /app folder with app
 RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
 
