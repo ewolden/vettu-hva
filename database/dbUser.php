@@ -273,28 +273,28 @@ class dbUser extends dbHelper {
     	$subject = 'Velkommen som ny bruker';
     	$message = 'Hei, <br><br>
         Takk for at du har registrert deg og velkommen som ny bruker av Vettu hva?. ' .
-            'Vi bekrefter at det er opprettet en brukerprofil med bruker ' . $email .
-            ' i vår database. <br><br> Logg inn med brukernavn <b>' . $email .
-            '</b> for å lese historier om kulturarv anbefalt basert på dine preferanser.<br><br>
+            'Vi bekrefter at det er opprettet en brukerprofil med e-post ' . $email .
+            ' i vår database. <br><br> Logg inn med e-post <b>' . $email .
+            '</b> for å lese fortellinger om kulturarv anbefalt basert på dine interesser.<br><br>
         Med vennlig hilsen <br>Vettu hva?';
     	$altMessage = 'Hei,
         Takk for at du har registrert deg og velkommen som ny bruker av Vettu hva?. ' .
-            'Vi bekrefter at det er opprettet en brukerprofil med bruker ' . $email .
-            ' i vår database. Logg inn med brukernavn ' . $email .
-            ' for å lese historier om kulturarv anbefalt basert på dine preferanser.
+            'Vi bekrefter at det er opprettet en brukerprofil med e-post ' . $email .
+            ' i vår database. Logg inn med e-post ' . $email .
+            ' for å lese fortellinger om kulturarv anbefalt basert på dine interesser.
         Med vennlig hilsen Vettu hva?';
     
     	if ($updated) {
     		$subject = 'Bruker oppdatert';
     		$message = 'Hei, <br><br>Vi bekrefter at brukerprofil med bruker ' .
     				$email . ' har blitt oppdatert i vår database.<br><br>
-            Du kan nå logge inn med brukernavn <b>' . $email .
-                '</b> for å lese historier om kulturarv anbefalt basert på dine preferanser.
+            Du kan nå logge inn med e-post <b>' . $email .
+                '</b> for å lese fortellinger om kulturarv anbefalt basert på dine interesser.
             <br><br>Med vennlig hilsen <br>Vettu hva?';
     		$altMessage = 'Hei, Vi bekrefter at brukerprofil med bruker ' .
     				$email . ' har blitt oppdatert i vår database.
-            Du kan nå logge inn med brukernavn ' . $email .
-                ' for å lese historier om kulturarv anbefalt basert på dine preferanser.
+            Du kan nå logge inn med e-post ' . $email .
+                ' for å lese fortellinger om kulturarv anbefalt basert på dine interesser.
             Med vennlig hilsen Vettu hva?';
     	}
     
