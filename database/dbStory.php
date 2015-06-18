@@ -174,7 +174,7 @@ class dbStory extends dbHelper{
 	 */
     public function fetchStory($storyId, $userId){
     	$categories = $this->db->prepare(
-    		"SELECT group_concat(distinct categoryId) as categories
+    		"SELECT group_concat(distinct categoryId order by categoryId) as categories
     		FROM story as s, category_mapping as cm, story_subcategory as ss, subcategory as sc, story_media as sm
     		WHERE sc.subcategoryId = cm.subcategoryId
     		AND ss.subcategoryId = sc.subcategoryId
@@ -197,7 +197,7 @@ class dbStory extends dbHelper{
      */
 	public function getRecommendedStories($userId){
 		$stmt = $this->db->prepare(
-			"select ss.userId, ss.storyId, ss.recommend_ranking, ss.explanation, ss.false_recommend, nes.title, nes.introduction,nes.author,group_concat(distinct nes.categories) as categories, group_concat(distinct nes.mediaId) as mediaId
+			"select ss.userId, ss.storyId, ss.recommend_ranking, ss.explanation, ss.false_recommend, nes.title, nes.introduction,nes.author,group_concat(distinct nes.categories order by nes.categories) as categories, group_concat(distinct nes.mediaId) as mediaId
 			from stored_story as ss
 			left join (SELECT s.storyId as storyId ,s.title as title, s.introduction as introduction, s.author as author,group_concat(distinct sm.mediaId) as mediaId, group_concat(distinct nested.categoryId) as categories
 						FROM story as s
@@ -252,7 +252,7 @@ class dbStory extends dbHelper{
 			$category = 'c.categoryId';
 		}
 		$query = "SELECT s.storyId, title, author, introduction, us.insertion_time AS insertion_time,
-				group_concat(distinct c.categoryId) AS categories, mediaId, st.rating AS rating
+				group_concat(distinct c.categoryId order by c.categoryId) AS categories, mediaId, st.rating AS rating
 				FROM story AS s JOIN 
 					(SELECT story.storyId AS storyId , cm.categoryId AS categoryId 
 					FROM story, 
@@ -303,7 +303,7 @@ class dbStory extends dbHelper{
 	 * @return $rows rows returned from the database query
 	 */
 	public function getStories(){
-		$query = "SELECT s.storyId,numericalId,group_concat(distinct nested.categoryId) as categories
+		$query = "SELECT s.storyId,numericalId,group_concat(distinct nested.categoryId order by nested.categoryId) as categories
 				 FROM story as s
 				LEFT JOIN (SELECT ss.storyId as storyId, cm.categoryId as categoryId FROM category_mapping as cm, story_subcategory as ss, subcategory as sub
 							WHERE sub.subcategoryId = cm.subcategoryId 
