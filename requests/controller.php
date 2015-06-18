@@ -30,6 +30,7 @@ require_once(__DIR__."/../models/userModel.php");
 require_once(__DIR__."/../database/dbUser.php");
 require_once(__DIR__."/../database/dbStory.php");
 require_once(__DIR__."/../personalization/runRecommender.php");
+require_once(__DIR__."/../database/config.php");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header("Content-Type: application/json; charset=UTF-8");
@@ -40,7 +41,8 @@ $postdata = file_get_contents("php://input");
 //$postdata = $_POST['data'];
 $request = json_decode($postdata);
 $type = $request->type;
-switch ($type) {
+if ($request->token == TOKEN){
+	switch ($type) {
 
 	/**Returns all contents from a single story*/
 	case "getStory":
@@ -65,12 +67,19 @@ switch ($type) {
 	$data = $dbStory->getRecommendedStories($request->userId);
 	$returnArray = array();
 	foreach ($data as $story) {
+		$explanationArray = explode(',DF.',$story['explanation']);
+		array_walk($explanationArray,
+				function (&$value, $key){ 
+					if($key != 0) {
+						$value = 'DF.'.$value;
+					}
+				});
 		$list = array(
 			'id' => $story['storyId'],
 			'title' => $story['title'],
 			'description' => $story['introduction'],
 			'false_recommend' => $story['false_recommend'],
-			'explanation' => explode(",",$story['explanation']),
+			'explanation' => $explanationArray,
 			'picture' => "",
 			'thumbnail' => "",
 			'categories' => "",
@@ -176,18 +185,38 @@ switch ($type) {
 
 	/** Add a new tag and connect it to the user, and the story*/
 	case "addNewTag":
-	$dbUser->insertUpdateAll('user_tag', array($request->userId, $request->tagName));
-	$timestamp = date('Y-m-d G:i:s');
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
+	$updated = $dbUser->insertUpdateAll('user_tag', array($request->userId, $request->tagName));
+	if ($updated){
+		$timestamp = date('Y-m-d G:i:s');
+		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
+		if ($updated){
+			print_r(json_encode(array('status' => "successfull")));
+		}
+		else {
+			print_r(json_encode(array('status' => "failed")));
+		}
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 
 	/** Tag a story*/
 	case "tagStory":
 	if($request->tagName == "Les senere"){
-		$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 3));
+		$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 3));
+		if(!$updated){
+			print_r(json_encode(array('status' => "failed")));
+		}
 	}
 	$timestamp = date('Y-m-d G:i:s');
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
+	$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, $request->tagName, $timestamp));
+	if($updated){
+		print_r(json_encode(array('status' => "successfull")));
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 
 	/** Get all stories connected to a user and the tagName*/
@@ -260,23 +289,52 @@ switch ($type) {
 
 	/** Remove a tag connected to a story (remove from list)*/
 	case "removeTagStory":
-	$dbUser->deleteFromTable('user_storytag', array('userId', 'storyId', 'tagName'), array($request->userId, $request->storyId, $request->tagName));
+	$success = $dbUser->deleteFromTable('user_storytag', array('userId', 'storyId', 'tagName'), array($request->userId, $request->storyId, $request->tagName));
+	if ($success) {
+		print_r(json_encode(array('status' => "successfull")));
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 
 	/** Remove a tag (list) altogether for a user, both the connection to the user and for all stories connected to the tag*/
 	case "removeTag":
-	$dbUser->deleteFromTable('user_storytag', array('userId', 'tagName'), array($request->userId, $request->tagName));
-	$dbUser->deleteFromTable('user_tag', array('userId', 'tagName'), array($request->userId, $request->tagName));
+	$success = $dbUser->deleteFromTable('user_storytag', array('userId', 'tagName'), array($request->userId, $request->tagName));
+	if($success){
+		$success = $dbUser->deleteFromTable('user_tag', array('userId', 'tagName'), array($request->userId, $request->tagName));
+		if($success){
+			print_r(json_encode(array('status' => "successfull")));
+		}
+		else {
+			print_r(json_encode(array('status' => "failed")));
+		}
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 
 	/** Set reject state in the database */
 	case "rejectStory":
-	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 2));
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 2));
+	if($updated){
+		print_r(json_encode(array('status' => "successfull")));
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 	
 	/** Set swiped past state in the database */
 	case "swipedPastStory":
-	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6));
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6));
+	if($updated){
+		print_r(json_encode(array('status' => "successfull")));
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
 	break;
 	
 	/** Register users usage of app in the database */
@@ -292,9 +350,21 @@ switch ($type) {
 	
 	/** Set recommended state for story in database */ 
 	case "recommendedStory":
-	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
-	$timestamp = date('Y-m-d G:i:s');
-	$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk', $timestamp));
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
+	if($updated){
+		$timestamp = date('Y-m-d G:i:s');
+		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk', $timestamp));
+		if($updated){
+			print_r(json_encode(array('status' => "successfull")));
+		}
+		else {
+			print_r(json_encode(array('status' => "failed")));
+		}
+	}
+	else {
+		print_r(json_encode(array('status' => "failed")));
+	}
+	
 	break;
 	
 	/** Get more stories after the 10 initial recommendations*/
@@ -346,6 +416,7 @@ switch ($type) {
 	echo "Unknown type";
 	break;
 
+	}
 }
 $dbUser->close();
 $dbStory->close();

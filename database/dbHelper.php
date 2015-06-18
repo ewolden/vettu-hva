@@ -253,7 +253,8 @@ class DbHelper extends dbConstants {
 		list($where, $values) = $this->getWhereStringAndValuesArray($whereColumns, $whereValues);
 		$query = "DELETE FROM ".$tableName." WHERE ".$where."";
 		$stmt = $this->db->prepare($query);
-		$stmt->execute($values);
+		$returnValue = $stmt->execute($values);
+		return $returnValue;
 	}
 	
 	/**
@@ -272,14 +273,4 @@ class DbHelper extends dbConstants {
 	}
 	
 }
-//$db->getUserCategories(1);
-//print_r('Running');
-//$db->insertUpdateAll('category_preference', array(1,2));
-//$db->getMailFromId('5');
-//$newUser1 = New userModel('6', 'kjerstiii@gmail.com', '1', '1', '0');
-//$db->updateUserInfo($newUser1);
-
-//$db->insertUpdateAll('user_storytag', array(1, 'DF.1295', 'test'));
-//$db->deleteFromTable('user_storytag', array('userId', 'tagName'), array(1, 'test'));
-//$db->deleteFromTable('user_tag', array('userId', 'tagName'), array(1, 'test'));
 ?>
