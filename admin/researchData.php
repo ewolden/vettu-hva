@@ -2,6 +2,11 @@
 require_once (__DIR__.'/../database/dbHelper.php');
 require_once (__DIR__.'/../PHPExcel_1.8.0_doc/Classes/PHPExcel.php');
 
+print_r(extension_loaded('xml'));
+print_r(PHP_EOL);
+print_r(extension_loaded('zip'));
+print_r(PHP_EOL);
+print_r(extension_loaded('gd'));
 ini_set('max_execution_time', 1500);
 createSheets();
 	
