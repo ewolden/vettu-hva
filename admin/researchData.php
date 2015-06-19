@@ -35,9 +35,9 @@ function createSheets(){
 	$objPHPExcel->setActiveSheetIndex(0);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 	print_r('before save...');
-	$fileName = 'reasearchData.xlsx';
+	$fileName = 'researchData.xlsx';
 	print_r(PHP_EOL);
-	print_r(is_writable($fileName););
+	print_r(is_writable($fileName));
 	$objWriter->save($fileName);
 	print_r('after save...');
 }
