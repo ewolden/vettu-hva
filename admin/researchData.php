@@ -11,12 +11,14 @@ ini_set('max_execution_time', 1500);
 createSheets();
 	
 function createSheets(){
+	print_r(PHP_EOL);
 	print_r('inside createSheets...');
 	$db = new dbHelper();
 	$objPHPExcel = new PHPExcel();
 	$tables = array('user','story', 'user_usage','category_preference','preference_value', 'user_tag','user_storytag','stored_story','state','story_state','story_media','media_format','story_subcategory','category_mapping','subcategory', 'category');
 	$sheetIndex = 0;
 	foreach ($tables as $table){
+		print_r('inside foreach-loop...');
 		$newSheet = $objPHPExcel->createSheet($sheetIndex);
 		$objPHPExcel->setActiveSheetIndex($sheetIndex);
 		$data = $db->getSelected($table, '*', '1','1');
@@ -35,11 +37,13 @@ function createSheets(){
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 	print_r('before save...');
 	$objWriter->save(str_replace('.php', '.xlsx', __FILE__));
+	var_dump($objWriter);
 	print_r('after save...');
 }
 
 
 function createSheetFromTable($data, $columns, $sheetIndex, $objPHPExcel){
+	print_r('inside createSheetFromTable...');
 	/*Used to create cell-identifiers in Excel*/
 	$alphabet = array('A','B','C','D','E','F','G','H','I','J','K');
 	
