@@ -38,7 +38,7 @@ function createSheets(){
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 	print_r('before save...');
 	var_dump($objWriter);
-	$objWriter->save(str_replace('.php', '.xlsx', __FILE__));
+	$objWriter->save('researchData.xlsx');
 	print_r('after save...');
 }
 
