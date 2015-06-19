@@ -11,6 +11,7 @@ ini_set('max_execution_time', 1500);
 createSheets();
 	
 function createSheets(){
+	print_r('inside createSheets...');
 	$db = new dbHelper();
 	$objPHPExcel = new PHPExcel();
 	$tables = array('user','story', 'user_usage','category_preference','preference_value', 'user_tag','user_storytag','stored_story','state','story_state','story_media','media_format','story_subcategory','category_mapping','subcategory', 'category');
@@ -29,9 +30,12 @@ function createSheets(){
 		$newSheet->freezePane('A2');
 		$sheetIndex++;
 	}
+	print_r('after foreach-loop...');
 	$objPHPExcel->setActiveSheetIndex(0);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+	print_r('before save...');
 	$objWriter->save(str_replace('.php', '.xlsx', __FILE__));
+	print_r('after save...');
 }
 
 
