@@ -8,7 +8,6 @@ print_r(extension_loaded('zip'));
 print_r(PHP_EOL);
 print_r(extension_loaded('gd'));
 ini_set('max_execution_time', 1500);
-error_reporting(E_ALL); ini_set('display_errors', TRUE); ini_set('display_startup_errors', TRUE);
 createSheets();
 	
 function createSheets(){
@@ -38,7 +37,7 @@ function createSheets(){
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 	print_r('before save...');
 	var_dump($objWriter);
-	$objWriter->save('researchData.xlsx');
+	$objWriter->save('/researchData.xlsx');
 	print_r('after save...');
 }
 
