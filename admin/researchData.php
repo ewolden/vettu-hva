@@ -2,17 +2,10 @@
 require_once (__DIR__.'/../database/dbHelper.php');
 require_once (__DIR__.'/../PHPExcel_1.8.0_doc/Classes/PHPExcel.php');
 
-print_r(extension_loaded('xml'));
-print_r(PHP_EOL);
-print_r(extension_loaded('zip'));
-print_r(PHP_EOL);
-print_r(extension_loaded('gd'));
 ini_set('max_execution_time', 1500);
 createSheets();
 	
 function createSheets(){
-	print_r(PHP_EOL);
-	print_r('inside createSheets...');
 	$db = new dbHelper();
 	$objPHPExcel = new PHPExcel();
 	$tables = array('user','story', 'user_usage','category_preference','preference_value', 'user_tag','user_storytag','stored_story','state','story_state','story_media','media_format','story_subcategory','category_mapping','subcategory', 'category');
@@ -31,15 +24,10 @@ function createSheets(){
 		$newSheet->freezePane('A2');
 		$sheetIndex++;
 	}
-	print_r('after foreach-loop...');
 	$objPHPExcel->setActiveSheetIndex(0);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-	print_r('before save...');
 	$fileName = 'researchData.xlsx';
-	print_r(PHP_EOL);
-	print_r(is_writable($fileName));
 	$objWriter->save($fileName);
-	print_r('after save...');
 }
 
 
