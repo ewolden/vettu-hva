@@ -23,6 +23,10 @@ RUN mv /app/docker/apache_default /etc/apache2/sites-available/000-default.conf
 RUN mv /app/docker/crons.conf /crons.conf
 RUN chmod 755 /crons.conf
 
+# File permissions
+RUN chmod o=rwx /app/database/harvestArea.txt
+RUN chmod o=rwx /app/admin/
+
 # Add config file with passwords
 ADD config.php /app/database/config.php
 
