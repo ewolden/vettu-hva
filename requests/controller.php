@@ -218,7 +218,49 @@ if ($request->token == TOKEN){
 		print_r(json_encode(array('status' => "failed")));
 	}
 	break;
-
+	
+	/*Gets stories opened but not rated*/
+	case "getNotifications":
+	$data = $dbStory->getNotifications($request->userId, $request->offset,20);
+	$returnArray = array();
+	foreach($data as $story){
+		$list = array(
+			'id' => $story['storyId'],
+			'title' => $story['title'],
+			'description' => $story['introduction'],
+			'picture' => "",
+			'thumbnail' => "",
+			'categories' => "",
+			'mediaType' => array(),
+			'author' => $story['author'],
+		    'lastOpened' => $story['lastOpened'],
+			'rating' => $story['rating']);
+		if(array_key_exists('categories', $story))
+			$list['categories'] = explode(",",$story['categories']);
+		if(array_key_exists('mediaId', $story)){
+			$medialist = explode(",", $story['mediaId']);
+			if(in_array(1, $medialist)){
+				array_push($list['mediaType'], "picture");
+				$list['picture'] = "http://media31.dimu.no/media/image/H-DF/".$story['storyId']."/0?byIndex=true&height=400&width=400";
+				$list['thumbnail'] = "http://api.digitaltmuseum.no/media?owner=H-DF&identifier=".$story['storyId']."&type=thumbnail&api.key=demo";
+			}
+			if(in_array(2, $medialist))
+				array_push($list['mediaType'], "audio");
+			if(in_array(3, $medialist))
+				array_push($list['mediaType'], "video");
+		}		
+		array_push($returnArray, $list);
+	}
+	print_r(json_encode($returnArray));
+	break;
+	
+	/*Find how many stories how been opened but not rated*/
+	case "getNumberOfNotifications":
+	$data = $dbStory->getNotifications($request->userId, 0,'18446744073709551615');
+	$returnArray = array('numberOfNotifications' => sizeof($data));
+	print_r(json_encode($returnArray));
+	break;
+	
 	/** Get all stories connected to a user and the tagName*/
 	case "getList":
 	$data = $dbStory->getStoryList($request->userId, $request->tagName, $request->category, 

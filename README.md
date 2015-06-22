@@ -34,11 +34,12 @@ DB_HOST -  Can be left blank which is the same as typing localhost
 
 DB_NAME - storytelling is the name of the database
 
-API_URL - This is the URL to digitalt musems API
+API_URL - This is the URL to Digitalt museums API
 
-API_KEY - The API key needed to use digitalt museums API
+API_KEY - The API key needed to use Digitalt museums API
 
 APP_MAIL - The email used for sending users emails upon creation of user (uses a gmail address)
 
 APP_MAIL_PASS - The password for the email given
 
+TOKEN - Token to ensure that post request to controller.php comes from the application

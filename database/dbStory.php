@@ -282,6 +282,34 @@ class dbStory extends dbHelper{
 		return($rows);
 	}
 
+	public function getNotifications($userId, $offset,$number){
+		$query = "SELECT s.storyId, maxOpen.lastOpened AS lastOpened, state.stateId,title, author, introduction,
+			group_concat(DISTINCT c.categoryId ORDER BY c.categoryId) AS categories, mediaId, st.rating AS rating
+			FROM story AS s, story_media AS sm, stored_story AS st JOIN 
+					(SELECT storyId,max(point_in_time) as lastOpened FROM story_state 
+					WHERE userId=:userId AND stateID=4 GROUP BY storyId) AS maxOpen On st.storyId=maxOpen.storyId,
+					story_subcategory AS ss, category_mapping AS cm, category AS c, story_state AS state
+			WHERE s.storyId = sm.storyId
+			AND st.storyId = s.storyId
+			AND st.userId = :userId
+			AND state.userId=st.userId
+			AND state.storyId=st.storyId
+			AND s.storyId = ss.storyId
+			AND ss.subcategoryId = cm.subcategoryId
+			AND cm.categoryId = c.categoryId
+			AND state.stateId=4
+			AND st.rating IS NULL
+			AND maxOpen.lastOpened < (NOW() - INTERVAL 2 DAY)
+			GROUP BY s.storyId
+			ORDER BY lastOpened DESC
+			LIMIT ".$offset.",".$number;
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$stmt->execute();
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return($rows);	
+	}
+	
 	/**
 	 * Get the subcategory-IDs connected to each story. 
 	 * Using LEFT JOIN to also get stories not connected to any subcategory 
