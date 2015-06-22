@@ -144,14 +144,17 @@ public class CollaborativeRecommender {
 			/* To get a story outside of the users preferences, finds the least recommended story */
     		if(randomDislikedRanking == ranking){
     			/*Make sure the false recommendation is not already in the front end array or already among the top ten recommendation (may happen if the user doesn't have many not seen/not rated stories left) */
-    			for(int i=1; i<collaborativeRecommendations.size(); i++){
-    				long dislikedStoryId = collaborativeRecommendations.get(collaborativeRecommendations.size() - i).getItem().getItemID();
-    				if (!frontendStories.contains((int)dislikedStoryId) && !idsToBeInserted.contains(dislikedStoryId) && ratedStories.get((int)dislikedStoryId) == null){
-    					itemsToBeInserted.add(new DatabaseInsertObject((int)userId, "DF."+dislikedStoryId, "FalseRecommendation", 1, 0, ranking,collaborativeRecommendations.get(collaborativeRecommendations.size() - i).getItem().getValue()));
-    					idsToBeInserted.add(dislikedStoryId);
-    					System.out.print("False recommend: ");
-    					System.out.println(dislikedStoryId);    				
-    					break;
+    			for(int i=1; i<50; i++){
+    				int randomDisliked = rand.nextInt(50)+1;
+    				if ((collaborativeRecommendations.size() - randomDisliked)>=0){
+    				long dislikedStoryId = collaborativeRecommendations.get(collaborativeRecommendations.size() - randomDisliked).getItem().getItemID();
+	    				if (!frontendStories.contains((int)dislikedStoryId) && !idsToBeInserted.contains(dislikedStoryId) && ratedStories.get((int)dislikedStoryId) == null){
+	    					itemsToBeInserted.add(new DatabaseInsertObject((int)userId, "DF."+dislikedStoryId, "FalseRecommendation", 1, 0, ranking,collaborativeRecommendations.get(collaborativeRecommendations.size() - randomDisliked).getItem().getValue()));
+	    					idsToBeInserted.add(dislikedStoryId);
+	    					System.out.print("False recommend: ");
+	    					System.out.println(dislikedStoryId);    				
+	    					break;
+	    				}
     				}
     			}
     			ranking++;
