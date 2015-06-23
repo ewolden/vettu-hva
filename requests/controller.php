@@ -395,7 +395,7 @@ if ($request->token == TOKEN){
 	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
 	if($updated){
 		$timestamp = date('Y-m-d G:i:s');
-		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Anbefalte fortellinger', $timestamp));
+		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Tidligere anbefalt', $timestamp));
 		if($updated){
 			print_r(json_encode(array('status' => "successfull")));
 		}
