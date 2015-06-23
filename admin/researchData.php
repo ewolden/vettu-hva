@@ -26,10 +26,12 @@ function createSheets(){
 	}
 	$objPHPExcel->setActiveSheetIndex(0);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-	$fileName = 'researchData.xlsx';
+	$fileName = __DIR__.'/researchData.xlsx';
 	var_dump($objWriter);
+	print_r('Before save...');
 	$objWriter->save($fileName);
-	chmod('researchData.xlsx',0776);
+	print_r('After save...');
+	chmod($fileName,0776);
 }
 
 
