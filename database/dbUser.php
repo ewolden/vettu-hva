@@ -98,9 +98,9 @@ class dbUser extends dbHelper {
         		$userId = $user->getUserId();
         	else return false;
         } else {
-        	$this->insertUpdateAll('user_tag', array($userId, "Lest"));
+        	$this->insertUpdateAll('user_tag', array($userId, "Vurderte fortellinger"));
         	$this->insertUpdateAll('user_tag', array($userId, "Les senere"));
-			$this->insertUpdateAll('user_tag', array($userId, "Historikk"));
+			$this->insertUpdateAll('user_tag', array($userId, "Anbefalte fortellinger"));
         }
 
          /*Inserting category preferences*/

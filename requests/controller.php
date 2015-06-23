@@ -171,7 +171,7 @@ if ($request->token == TOKEN){
 		
 		if($updated){
 			$timestamp = date('Y-m-d G:i:s');
-			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Lest", $timestamp));
+			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Vurderte fortellinger", $timestamp));
 			$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 5));
 
 			print_r(json_encode(array('status' => "successfull")));
@@ -395,7 +395,7 @@ if ($request->token == TOKEN){
 	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
 	if($updated){
 		$timestamp = date('Y-m-d G:i:s');
-		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Historikk', $timestamp));
+		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Anbefalte fortellinger', $timestamp));
 		if($updated){
 			print_r(json_encode(array('status' => "successfull")));
 		}
