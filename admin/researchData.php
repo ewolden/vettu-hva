@@ -3,8 +3,6 @@ require_once (__DIR__.'/../database/dbHelper.php');
 require_once (__DIR__.'/../PHPExcel_1.8.0_doc/Classes/PHPExcel.php');
 
 ini_set('max_execution_time', 1500);
-unlink('researchData.xlsx');
-sleep(60);
 createSheets();
 	
 function createSheets(){
@@ -29,7 +27,9 @@ function createSheets(){
 	$objPHPExcel->setActiveSheetIndex(0);
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 	$fileName = 'researchData.xlsx';
+	var_dump($objWriter);
 	$objWriter->save($fileName);
+	chmod('researchData.xlsx',0776);
 }
 
 
