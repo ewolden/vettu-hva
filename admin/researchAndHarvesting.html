@@ -6,12 +6,31 @@
 	<body>
 		<div class="section" id="research">
 			<h2 class="sectionHeader" id="researchHeader">Research data</h2>
-			<input type="button" value="Generate Excel file" onclick="createResearchData()">
+			<h4>For one user</h4>
+			<div id="userSelectDiv"><h5>Select user ID:</h5></div><br>
+			<input type="button" value="Generate Excel file for one user" onclick="createResearchData('one')">
 			<br><br>
-			<div id="downloadDiv"></div>
+			<div id="downloadDiv1"></div>
+			<h4>For all users</h4>
+			<input type="button" value="Generate Excel file for all users" onclick="createResearchData('all')">
+			<br><br>
+			<div id="downloadDiv2"></div>
 			<script>
-				var downloadDiv = document.getElementById("downloadDiv");
-				function createResearchData(){
+				var downloadDiv;
+				
+				function createResearchData(oneOrAll){
+					var params = '';
+					var divNumber = 0;
+					if(oneOrAll === 'one'){
+						var select = document.getElementById('userSelect');
+						var userId = select.options[select.selectedIndex].value;
+						params = 'userId='+userId;
+						downloadDiv = document.getElementById('downloadDiv'+1);
+					}
+					else {
+						params = 'userId=all';
+						downloadDiv = document.getElementById('downloadDiv'+2);
+					}
 					downloadDiv.innerHTML = "Generating Excel file (this may take a while) ...";
 					var t = setInterval(addDot, 1000);
 					xmlhttp = new XMLHttpRequest();
@@ -30,13 +49,12 @@
 								a.innerHTML = 'Download Excel file';
 								a.href = 'researchData.xlsx';
 								downloadDiv.appendChild(a);
-								var research = document.getElementById('research');
-								research.appendChild(downloadDiv);
 							}				
 						}
 					}
-					xmlhttp.open("POST", "./researchData.php", true);
-					xmlhttp.send();	
+					xmlhttp.open("POST", "researchData.php", true);
+					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					xmlhttp.send(params);	
 				}
 				function addDot(){
 					downloadDiv.innerHTML += ".";
@@ -94,6 +112,27 @@
 					}
 					xmlhttp.open("GET", "./getSelectedCounties.php", true);
 					xmlhttp.send();	
+					
+					xmlhttp2 = new XMLHttpRequest();
+					xmlhttp2.onreadystatechange=function(){
+						if (xmlhttp2.readyState==4 && xmlhttp2.status==200) {
+							var response = xmlhttp2.response;
+							var userArray = response.split(',');
+							var select = document.createElement('select');
+							select.id = 'userSelect';
+							for (user in userArray){
+								var opt = document.createElement('option');
+								opt.value = userArray[user];
+								opt.innerHTML = userArray[user];
+								
+								select.appendChild(opt);
+							}
+							var selectDiv = document.getElementById('userSelectDiv');
+							selectDiv.appendChild(select);
+						}
+					}
+					xmlhttp2.open("GET", "./getUsers.php", true);
+					xmlhttp2.send();	
 				}
 				
 				function noLimitClicked(){

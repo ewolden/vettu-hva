@@ -15,18 +15,43 @@ function shutDownFunction() {
         echo "fatal";    
     } 
 }
-	
+
+
 createSheets();	
 
 function createSheets(){
+	$userId = $_POST['userId'];
 	$db = new dbHelper();
 	$objPHPExcel = new PHPExcel();
 	$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
 	$cacheSettings = array( ' memoryCacheSize ' => '256MB');
 	PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-	$tables = array('user','story', 'user_usage','category_preference','preference_value', 'user_tag','user_storytag','stored_story','state','story_state','story_media','media_format','story_subcategory','category_mapping','subcategory', 'category');
+	$userTables = array('user', 'user_usage','category_preference','preference_value', 'user_tag','user_storytag','stored_story','story_state');
+	$nonUserTables = array('story', 'state','story_media','media_format','story_subcategory','category_mapping','subcategory', 'category');
 	$sheetIndex = 0;
-	foreach ($tables as $table){
+	if($userId == 'all'){
+		$whereClause = '1';
+		$whereValue = '1';
+	}
+	else {
+		$whereClause = 'userId';
+		$whereValue = $userId;
+	}
+	foreach ($userTables as $userTable){
+		$newSheet = $objPHPExcel->createSheet($sheetIndex);
+		$objPHPExcel->setActiveSheetIndex($sheetIndex);
+		$data = $db->getSelected($userTable, '*', $whereClause,$whereValue);
+		
+		/*Get the columns in the table. Stored in dbConstants.php*/
+		$columns = array_slice($db->getTableColumns($userTable),2);
+		
+		createSheetFromTable($data, $columns, $sheetIndex, $objPHPExcel);
+
+		$newSheet->setTitle($userTable);
+		$newSheet->freezePane('A2');
+		$sheetIndex++;
+	}
+	foreach ($nonUserTables as $table){
 		$newSheet = $objPHPExcel->createSheet($sheetIndex);
 		$objPHPExcel->setActiveSheetIndex($sheetIndex);
 		$data = $db->getSelected($table, '*', '1','1');
