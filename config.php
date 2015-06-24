@@ -7,4 +7,5 @@ define('API_URL', 'http://api.digitaltmuseum.no/solr/');
 define('API_KEY', '');
 define('APP_MAIL', '');
 define('APP_MAIL_PASS', '');
+define('TOKEN','something');
 ?>

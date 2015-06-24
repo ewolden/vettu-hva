@@ -1,10 +1,12 @@
 #vettu-hva backend developer documentation
 
-This repository is the code for the backend part of a student project developt during the spring of 2015. The frontend part can be found at: https://github.com/RoarG/VettuHva-FrontEnd
+This repository contains the code for the backend part of a student project that developed the application "Vettu hva?" during the spring of 2015. "Vettu hva?" is a prototype of a mobile application that gives users recommendations on cultural stories based on their interest. The application was developed in context of the EU/FP7 IST research project [TAG CLOUD] (http://www.tagcloudproject.eu/). The goal of this project is the increase the interest in cultural heritage through a personalized cultural experience.
+
+The frontend part for "Vettu hva?" can be found at: https://github.com/RoarG/VettuHva-FrontEnd
 
 ##Repository description 
 
-A overview of each of the folders:
+###A overview of each of the folders:
 
 ####PHPExcel_1.8.0_doc
 Library for creating Excel-files in PHP
@@ -15,7 +17,7 @@ This section contains the classes dbStory, dbUser, dbHelper and harvesting. The 
 ####docker
 Consists of files used by the Dockerfile to configure the image.
 ####java
-This folder consists of the Java code and recommender.jar file which make up the Mahout recommender, and some tests.
+This folder consists of the Java code and recommender.jar file which make up the Mahout recommender, plus some tests.
 ####models
 Consisting of the classes storyModel, userModel and preferenceValue. The models are used to temporarily hold information about a story, a user and a user's preference value for a story to be utilized by other files. Information is either retrieved from the database, sent from front-end, harvested from Digitalt museum's API or a combination of these. These models also contain formatting methods, which makes it possible to return story or user information to front-end.
 ####personalization
@@ -25,7 +27,7 @@ Contains the controller script, which receives and handles front-end HTTP reques
 ####test
 Contains test-classes for most of the code.
 
-An overview of the structure:
+###An overview of the class structure:
 
 ![](/overall_backend.png)
 
@@ -33,7 +35,7 @@ An overview of the structure:
 
 ###Setting up a persistent Docker environment: 
 
-See [Docker docs] (http://docs.docker.com/installation/) for installing Docker on various platforms. Download the Dockerfile from this repository. The Dockerfile needs to be in the same folder as the config file (see sample config.php and description below) to build the image. Run this command to build the image: 
+See [Docker docs] (http://docs.docker.com/installation/) for installing Docker on various platforms. Download the Dockerfile from this repository. The Dockerfile needs to be in the same folder as the config file (see sample config.php and description below) to build the Docker image. Run this command to build the image: 
 
 ```docker build -t imageName folder_with_config_and_dockerfile```
 
