@@ -6,7 +6,7 @@ The frontend part for "Vettu hva?" can be found at: https://github.com/RoarG/Vet
 
 ##Install guide
 
-The backend uses Docker the ease the deployment of the application by providing a virtual operating-system-level abstraction. See more on https://www.docker.com/
+The backend uses Docker to ease the deployment of the application. This is done by providing a virtual operating-system-level abstraction. See more on https://www.docker.com/
 
 ###Setting up a persistent Docker environment: 
 
@@ -80,7 +80,7 @@ Note: the Dockerfile uses Java 7 as the recommender.jar files is compiled with J
 ####PHPExcel_1.8.0_doc
 Library for creating Excel-files in PHP. See: https://github.com/PHPOffice/PHPExcel
 ####admin
-Consists of files for creating a web interface for admin users. The admin tasks is the get research data from the application and to set which areas to harvest stories from Digitalt fortalt.
+Consists of files for creating a web interface for admin users. The admin tasks is to get research data from the application and to set which areas to harvest stories from Digitalt fortalt.
 ####database
 This section contains the classes dbStory, dbUser, dbHelper and harvesting. The db classes are responsible for accessing the database. dbStory contains methods for adding or retrieving story related information from the database and dbUser is responsible for user related information. dbHelper consists of more general methods and is the class which establishes a connection with the database. The harvesting script is responsible for collecting all database stories from Digitalt museums API and adding stories to or updating stories in the database. In addition, there is a SQL script for creating all the necessary tables in the database.
 ####docker
