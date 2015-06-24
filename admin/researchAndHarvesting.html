@@ -16,16 +16,23 @@
 					var t = setInterval(addDot, 1000);
 					xmlhttp = new XMLHttpRequest();
 					xmlhttp.onreadystatechange=function() {
-						if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+						if (xmlhttp.readyState==4){
 							clearInterval(t);
-							downloadDiv.innerHTML = "";
-							a = document.createElement("a");
-							a.setAttribute('download','');
-							a.innerHTML = 'Download Excel file';
-							a.href = 'researchData.xlsx';
-							downloadDiv.appendChild(a);
-							var research = document.getElementById('research');
-							research.appendChild(downloadDiv);
+							var response = xmlhttp.responseText;
+							response = response.substring(response.length-5,response.length);
+							if(response === "fatal"){
+								downloadDiv.innerHTML = "Fatal error. May be that the data volume was to large to handle (causing timeout or memory exhausting)";
+							}
+							else if (xmlhttp.status==200) {
+								downloadDiv.innerHTML = "";
+								a = document.createElement("a");
+								a.setAttribute('download','');
+								a.innerHTML = 'Download Excel file';
+								a.href = 'researchData.xlsx';
+								downloadDiv.appendChild(a);
+								var research = document.getElementById('research');
+								research.appendChild(downloadDiv);
+							}				
 						}
 					}
 					xmlhttp.open("POST", "./researchData.php", true);
