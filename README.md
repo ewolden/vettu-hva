@@ -8,7 +8,7 @@ Download the dockerfile, create a image from the docker file, this needs to be w
 
 Create a volume for docker to store databases in (only needs to be done the first time): 
 
-```docker create -v /dbdata --name Storytelling-DBdata imageName```
+```docker create -v /dbdata --name vettuhva-DBdata imageName```
 
 Start the docker image with importing from the database storage:
 
@@ -42,4 +42,4 @@ APP_MAIL - The email used for sending users emails upon creation of user (uses a
 
 APP_MAIL_PASS - The password for the email given
 
-TOKEN - Token to ensure that post request to controller.php comes from the application
+TOKEN - Token to ensure that only post request that comes from the application are treated by controller.php
