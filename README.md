@@ -4,34 +4,9 @@ This repository contains the code for the backend part of a student project that
 
 The frontend part for "Vettu hva?" can be found at: https://github.com/RoarG/VettuHva-FrontEnd
 
-##Repository description 
-
-###A overview of each of the folders:
-
-####PHPExcel_1.8.0_doc
-Library for creating Excel-files in PHP
-####admin
-Consists of a web interface for setting some variables for admin users.
-####database
-This section contains the classes dbStory, dbUser, dbHelper and harvesting. The db classes are responsible for accessing the database. dbStory contains methods for adding or retrieving story related information from the database and dbUser is responsible for user related information. dbHelper consists of more general methods and is the class which establishes a connection with the database. The harvesting script is responsible for collecting all database stories from Digitalt museums API and adding stories to or updating stories in the database.
-####docker
-Consists of files used by the Dockerfile to configure the image.
-####java
-This folder consists of the Java code and recommender.jar file which make up the Mahout recommender, plus some tests.
-####models
-Consisting of the classes storyModel, userModel and preferenceValue. The models are used to temporarily hold information about a story, a user and a user's preference value for a story to be utilized by other files. Information is either retrieved from the database, sent from front-end, harvested from Digitalt museum's API or a combination of these. These models also contain formatting methods, which makes it possible to return story or user information to front-end.
-####personalization
-Consisting of the classes computePreferences and runRecommender. This section computes preference values for each Digitalt fortalt story in the database for each user. runRecommender is also responsible for initializing the Mahout recommendation engine when a user's preference values have been calculated.
-####requests
-Contains the controller script, which receives and handles front-end HTTP requests and returns JSON responses.
-####test
-Contains test-classes for most of the code.
-
-###An overview of the class structure:
-
-![](/overall_backend.png)
-
 ##Install guide
+
+The backend uses Docker the ease the deployment of the application by providing a virtual operating-system-level abstraction. See more on https://www.docker.com/
 
 ###Setting up a persistent Docker environment: 
 
@@ -95,6 +70,35 @@ Development environment alternatives that include MySQL and PHP, for Linux and o
 
 Java download: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 Note: the Dockerfile uses Java 7 as the recommender.jar files is compiled with Java 7. This might be changed.
+
+
+
+##Repository description 
+
+###A overview of each of the folders:
+
+####PHPExcel_1.8.0_doc
+Library for creating Excel-files in PHP. See: https://github.com/PHPOffice/PHPExcel
+####admin
+Consists of files for creating a web interface for admin users. The admin tasks is the get research data from the application and to set which areas to harvest stories from Digitalt fortalt.
+####database
+This section contains the classes dbStory, dbUser, dbHelper and harvesting. The db classes are responsible for accessing the database. dbStory contains methods for adding or retrieving story related information from the database and dbUser is responsible for user related information. dbHelper consists of more general methods and is the class which establishes a connection with the database. The harvesting script is responsible for collecting all database stories from Digitalt museums API and adding stories to or updating stories in the database. In addition, there is a SQL script for creating all the necessary tables in the database.
+####docker
+Consists of files used by the Dockerfile to configure the image.
+####java
+This folder consists of the Java code and recommender.jar file which make up the Mahout recommender, plus some tests.
+####models
+Consisting of the classes storyModel, userModel and preferenceValue. The models are used to temporarily hold information about a story, a user and a user's preference value for a story to be utilized by other files. Information is either retrieved from the database, sent from front-end, harvested from Digitalt museum's API or a combination of these. These models also contain formatting methods, which makes it possible to return story or user information to front-end.
+####personalization
+Consisting of the classes computePreferences and runRecommender. This section computes preference values for each Digitalt fortalt story in the database for each user. runRecommender is also responsible for initializing the Mahout recommendation engine when a user's preference values have been calculated. The similarities.csv file in this folder is produced by the harvesting.php file and used by the recommender.jar file when computing content-based recommendations.
+####requests
+Contains the controller script, which receives and handles front-end HTTP requests and returns JSON responses.
+####test
+Contains test-classes for most of the code.
+
+###An overview of the class structure:
+
+![](/overall_backend.png)
 
 
 
