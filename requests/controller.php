@@ -50,7 +50,8 @@ if ($request->token == TOKEN){
 	$storyModel->getFromDF($request->storyId);
     $data = $dbStory->fetchStory($request->storyId, $request->userId);
 	$storyModel->fromDB($data);
-	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 4));
+	$timestamp = date('Y-m-d G:i:s');
+	$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 4, $timestamp));
 	print_r (json_encode($storyModel->getAll()));
 	break;
 	
@@ -172,14 +173,15 @@ if ($request->token == TOKEN){
 		if($updated){
 			$timestamp = date('Y-m-d G:i:s');
 			$dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, "Vurderte fortellinger", $timestamp));
-			$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 5));
+			$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 5, $timestamp));
 
 			print_r(json_encode(array('status' => "successfull")));
 		} else {
 			print_r(json_encode(array('status' => "failed")));
 		}
 	}else {
-		$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6));
+		$timestamp = date('Y-m-d G:i:s');
+		$dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6, $timestamp));
 	}
 	break;
 
@@ -204,7 +206,8 @@ if ($request->token == TOKEN){
 	/** Tag a story*/
 	case "tagStory":
 	if($request->tagName == "Les senere"){
-		$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 3));
+		$timestamp = date('Y-m-d G:i:s');
+		$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 3, $timestamp));
 		if(!$updated){
 			print_r(json_encode(array('status' => "failed")));
 		}
@@ -359,7 +362,8 @@ if ($request->token == TOKEN){
 
 	/** Set reject state in the database */
 	case "rejectStory":
-	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 2));
+	$timestamp = date('Y-m-d G:i:s');
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 2, $timestamp));
 	if($updated){
 		print_r(json_encode(array('status' => "successfull")));
 	}
@@ -370,7 +374,8 @@ if ($request->token == TOKEN){
 	
 	/** Set swiped past state in the database */
 	case "swipedPastStory":
-	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6));
+	$timestamp = date('Y-m-d G:i:s');
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 6, $timestamp));
 	if($updated){
 		print_r(json_encode(array('status' => "successfull")));
 	}
@@ -392,7 +397,8 @@ if ($request->token == TOKEN){
 	
 	/** Set recommended state for story in database */ 
 	case "recommendedStory":
-	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1));
+	$timestamp = date('Y-m-d G:i:s');
+	$updated = $dbStory->insertUpdateAll('story_state', array($request->storyId, $request->userId, 1, $timestamp));
 	if($updated){
 		$timestamp = date('Y-m-d G:i:s');
 		$updated = $dbUser->insertUpdateAll('user_storytag', array($request->userId, $request->storyId, 'Tidligere anbefalt', $timestamp));
