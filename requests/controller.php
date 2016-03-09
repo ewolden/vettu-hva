@@ -386,7 +386,8 @@ if ($request->token == TOKEN){
 	
 	/** Register users usage of app in the database */
 	case "appUsage":
-	$return = $dbStory->insertUpdateAll('user_usage', array($request->userId, $request->usageType));
+	$timestamp = date('Y-m-d G:i:s');
+	$return = $dbStory->insertUpdateAll('user_usage', array($request->userId, $request->usageType,$timestamp));
 	if($return){
 		print_r(json_encode(array('status' => "successfull")));
 	}
