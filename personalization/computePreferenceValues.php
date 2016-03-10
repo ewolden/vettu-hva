@@ -51,6 +51,9 @@ class computePreferenceValues {
 	 */
 	public function computeAllValues(){
 		$stories = $this->dbStory->getStories();
+		if (empty($stories)) {
+			return;
+		}
 		$values = array();
 		$placeHolderArray = array();
 		foreach($stories as $story){
