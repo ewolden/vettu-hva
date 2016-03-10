@@ -53,7 +53,7 @@ class dbStory extends dbHelper{
 		}
 	
         while($startDoc < $numberOfDocs || $numberOfDocs == -1){
-            $obj = json_decode(file_get_contents(API_URL.'select?q'.$areas.'=(identifier.owner:H-DF)&start='.$startDoc.'&wt=json&api.key='.API_KEY));
+            $obj = json_decode(file_get_contents(API_URL.'solr/select?q'.$areas.'=(identifier.owner:H-DF)&start='.$startDoc.'&wt=json&api.key='.API_KEY));
             $numberOfDocs = $obj->response->numFound;
             foreach($obj->response->docs as $doc) {
                 $doc = get_object_vars($doc);
@@ -68,7 +68,7 @@ class dbStory extends dbHelper{
 				$this->insertStory($storyModel, $harvestTime);
             }
         }
-		$this->deleteNotUpdatedStories($harvestTime);
+		//$this->deleteNotUpdatedStories($harvestTime);
 		print_r('done harvesting');
     }
 	

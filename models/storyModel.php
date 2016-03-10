@@ -25,6 +25,9 @@
  * @author Eivind Halmøy Wolden
  * @author Hanne Marie Trelease
  */
+
+require_once (__DIR__.'/../database/config.php');
+
 class storyModel{
     private $storyId;
     private $title;
@@ -61,7 +64,7 @@ class storyModel{
     public function getFromDF($id)
     {
 
-        $xml_from_API = $this->file_get_contents_utf8('http://api.digitaltmuseum.no/artifact?owner=H-DF&identifier='.$id.'&mapping=ABM&api.key=demo');
+        $xml_from_API = $this->file_get_contents_utf8(API_URL.'artifact?owner=H-DF&identifier='.$id.'&mapping=ABM&api.key='.API_KEY);
         $xml = simplexml_load_string($xml_from_API);
         
         $this->storyId = $id;
@@ -73,7 +76,7 @@ class storyModel{
         $this->municipality = (string) $xml->children('abm', TRUE)->municipality;
         $this->rights = (string) $xml->children('dc', TRUE)->rights;
         $this->institution = (string) $xml->children('europeana', TRUE)->dataProvider;
-        $this->url = "http://digitaltfortalt.no/things/thing/H-DF/".$this->storyId;
+        $this->url = (string) $xml->children('europeana', TRUE)->isShownAt;
         $this->createdDate = (string) $xml->children('dcterms', TRUE)->created; 
 		$this->lat = (string) $xml->children('abm', TRUE)->lat;
 		$this->long = (string) $xml->children('abm', TRUE)->long;
